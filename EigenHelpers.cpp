@@ -117,4 +117,26 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
   return covarianceMatrix;
 }
 
+VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
+                                                      const unsigned int numberOfDimensions)
+{
+  Eigen::MatrixXf covarianceMatrix = ConstructCovarianceMatrix(vectors);
+  std::cout << "covarianceMatrix: " << covarianceMatrix << std::endl;
+
+  typedef Eigen::JacobiSVD<Eigen::MatrixXf> SVDType;
+  SVDType svd(covarianceMatrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+  // Only keep the first N singular vectors of U
+  Eigen::MatrixXf truncatedU = TruncateColumns(svd.matrixU(), numberOfDimensions);
+
+
+  VectorOfVectors projected;
+  for(unsigned int i = 0; i < vectors.size(); ++i)
+  {
+    projected.push_back(truncatedU.transpose() * vectors[i]);
+  }
+
+  return projected;
+}
+
 }

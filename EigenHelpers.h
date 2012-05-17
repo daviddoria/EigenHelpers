@@ -45,6 +45,8 @@ Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors);
 
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
 
+EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
+                                                      const unsigned int numberOfDimensions);
 }
   
 #endif
