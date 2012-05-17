@@ -93,6 +93,48 @@ Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors)
   return meanVector;
 }
 
+Eigen::VectorXf ComputeMinVector(const EigenHelpers::VectorOfVectors& vectors)
+{
+  if(vectors.size() == 0)
+  {
+    throw std::runtime_error("Can't compute the mean of a list of vectors of length zero!");
+  }
+
+  Eigen::VectorXf minVector = Eigen::VectorXf::Zero(vectors[0].size());
+  for(int dim = 0; dim < vectors[0].size(); ++dim) // loop through each dimension
+  {
+    std::vector<float> values(vectors[0].size());
+    for(unsigned int i = 0; i < vectors.size(); ++i)
+    {
+      values[i] = vectors[i](dim);
+    }
+    minVector[dim] = *(std::min_element(values.begin(), values.end()));
+  }
+
+  return minVector;
+}
+
+Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors)
+{
+  if(vectors.size() == 0)
+  {
+    throw std::runtime_error("Can't compute the mean of a list of vectors of length zero!");
+  }
+
+  Eigen::VectorXf maxVector = Eigen::VectorXf::Zero(vectors[0].size());
+  for(int dim = 0; dim < vectors[0].size(); ++dim) // loop through each dimension
+  {
+    std::vector<float> values(vectors[0].size());
+    for(unsigned int i = 0; i < vectors.size(); ++i)
+    {
+      values[i] = vectors[i](dim);
+    }
+    maxVector[dim] = *(std::max_element(values.begin(), values.end()));
+  }
+
+  return maxVector;
+}
+
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors)
 {
   if(vectors.size() == 0)
