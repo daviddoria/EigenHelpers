@@ -41,6 +41,10 @@ void OutputMatrixSize(const Eigen::MatrixXf& m);
 
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep);
 
+Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors);
+
+Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
+
 }
   
 #endif
