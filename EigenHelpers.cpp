@@ -1,5 +1,7 @@
 #include "EigenHelpers.h"
 
+// STL
+#include <iostream>
 #include <stdexcept>
 
 namespace EigenHelpers
@@ -44,6 +46,32 @@ std::vector<float> EigenVectorToSTDVector(const Eigen::VectorXf& vec)
     stdvector[i] = vec[i];
   }
   return stdvector;
+}
+
+void OutputVectors(const VectorOfVectors& vectors)
+{
+  for(unsigned int i = 0; i < vectors.size(); ++i)
+  {
+    std::cout << vectors[i] << std::endl;
+  }
+}
+
+Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep)
+{
+  Eigen::MatrixXf truncated = Eigen::MatrixXf::Zero(m.rows(), numberOfColumnsToKeep);
+  for(int r = 0; r < truncated.rows(); ++r)
+  {
+    for(int c = 0; c < truncated.cols(); ++c)
+    {
+      truncated(r,c) = m(r,c);
+    }
+  }
+  return truncated;
+}
+
+void OutputMatrixSize(const Eigen::MatrixXf& m)
+{
+  std::cout << m.rows() << "x" << m.cols() << std::endl;
 }
 
 }
