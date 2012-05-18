@@ -43,6 +43,10 @@ Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int num
 
 Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors);
 
+Eigen::VectorXf ComputeMinVector(const EigenHelpers::VectorOfVectors& vectors);
+
+Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors);
+
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
 
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
