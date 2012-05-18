@@ -4,7 +4,7 @@ PROJECT(EigenHelpers)
 
 include_directories(/media/portable/src/Eigen)
 
-add_library(libEigenHelpers EigenHelpers.cpp)
+add_library(EigenHelpers EigenHelpers.cpp)
 
 # This is needed for shared_ptr and the trick using enable_if and if_fundamental to allow scalars
 # to be treated as the 0th component of a vector.
