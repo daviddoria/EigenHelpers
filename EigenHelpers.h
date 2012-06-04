@@ -53,7 +53,8 @@ EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::Vector
                                                       const unsigned int numberOfDimensions);
 
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
-                                                      const Eigen::MatrixXf& covarianceMatrix);
+                                                      const Eigen::MatrixXf& covarianceMatrix,
+                                                      const unsigned int numberOfDimensions);
 }
 
 #endif

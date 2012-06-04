@@ -191,4 +191,4 @@ VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vec
   return DimensionalityReduction(vectors, covarianceMatrix, numberOfDimensions);
 }
 
-}
+} // end EigenHelpers namespace
