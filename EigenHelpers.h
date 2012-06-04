@@ -51,6 +51,9 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
 
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
                                                       const unsigned int numberOfDimensions);
+
+EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
+                                                      const Eigen::MatrixXf& covarianceMatrix);
 }
-  
+
 #endif
