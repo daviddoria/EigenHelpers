@@ -163,10 +163,6 @@ EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::Vector
                                                       const Eigen::MatrixXf& covarianceMatrix,
                                                       const unsigned int numberOfDimensions)
 {
-  Eigen::MatrixXf covarianceMatrix = ConstructCovarianceMatrix(vectors);
-  //std::cout << "covarianceMatrix: " << covarianceMatrix << std::endl;
-  std::cout << "Computed covariance matrix." << std::endl;
-
   typedef Eigen::JacobiSVD<Eigen::MatrixXf> SVDType;
   SVDType svd(covarianceMatrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
