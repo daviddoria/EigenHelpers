@@ -143,11 +143,11 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
   }
 
   Eigen::VectorXf meanVector = ComputeMeanVector(vectors);
-  std::cout << "meanVector: " << meanVector << std::endl;
+  // std::cout << "meanVector: " << meanVector << std::endl;
 
   // Construct covariance matrix
   Eigen::MatrixXf covarianceMatrix = Eigen::MatrixXf::Zero(vectors[0].size(), vectors[0].size());
-  std::cout << "covarianceMatrix size: " << covarianceMatrix.rows() << " x " << covarianceMatrix.cols() << std::endl;
+  // std::cout << "covarianceMatrix size: " << covarianceMatrix.rows() << " x " << covarianceMatrix.cols() << std::endl;
 
   for(unsigned int i = 0; i < vectors.size(); ++i)
   {
@@ -160,10 +160,11 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
 }
 
 VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
-                                                      const unsigned int numberOfDimensions)
+                                        const unsigned int numberOfDimensions)
 {
   Eigen::MatrixXf covarianceMatrix = ConstructCovarianceMatrix(vectors);
-  std::cout << "covarianceMatrix: " << covarianceMatrix << std::endl;
+  //std::cout << "covarianceMatrix: " << covarianceMatrix << std::endl;
+  std::cout << "Computed covariance matrix." << std::endl;
 
   typedef Eigen::JacobiSVD<Eigen::MatrixXf> SVDType;
   SVDType svd(covarianceMatrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
