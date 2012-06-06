@@ -35,6 +35,8 @@ float SumOfAbsoluteDifferences(const Eigen::VectorXf& a, const Eigen::VectorXf& 
 
 std::vector<float> EigenVectorToSTDVector(const Eigen::VectorXf& vec);
 
+Eigen::VectorXf STDVectorToEigenVector(const std::vector<float>& vec);
+
 void OutputVectors(const VectorOfVectors& vectors);
 
 void OutputMatrixSize(const Eigen::MatrixXf& m);

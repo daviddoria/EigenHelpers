@@ -38,6 +38,17 @@ float SumOfAbsoluteDifferences(const Eigen::VectorXf& a, const Eigen::VectorXf& 
   return total;
 }
 
+Eigen::VectorXf STDVectorToEigenVector(const std::vector<float>& vec)
+{
+  Eigen::VectorXf eigenVector(vec.size());
+  for(unsigned int i = 0; i < static_cast<unsigned int>(vec.size()); ++i)
+  {
+    eigenVector[i] = vec[i];
+  }
+  // Could alternatively use an Eigen Map: http://eigen.tuxfamily.org/dox-devel/TutorialMapClass.html
+  return eigenVector;
+}
+
 std::vector<float> EigenVectorToSTDVector(const Eigen::VectorXf& vec)
 {
   std::vector<float> stdvector(vec.size());
@@ -45,6 +56,8 @@ std::vector<float> EigenVectorToSTDVector(const Eigen::VectorXf& vec)
   {
     stdvector[i] = vec[i];
   }
+  // Could equivalently do:
+  // std::vector<float> stdvector(vec.data(), vec.data()+vec.size());
   return stdvector;
 }
 
