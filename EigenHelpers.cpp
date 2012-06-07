@@ -200,4 +200,37 @@ VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vec
   return DimensionalityReduction(vectors, covarianceMatrix, numberOfDimensions);
 }
 
+void Standardize(EigenHelpers::VectorOfVectors& vectors)
+{
+  // Subtract the mean and divide by the standard devation of each set of corresponding elements.
+
+  // Each component of the result is the mean of the corresponding collection of elements. That is,
+  // the 0th component of 'meanVector' is the mean of all of the 0th components in 'vectors'.
+  Eigen::VectorXf meanVector = ComputeMeanVector(vectors);
+
+  // Variance = 1/NumPixels * sum_i (x_i - u)^2
+  Eigen::VectorXf standardDeviationVector(vectors[0].size());
+
+  // Loop over each element
+  for(unsigned int element = 0; element < vectors[0].size(); ++element)
+  {
+    float sumOfDifferenceFromMean = 0.0f;
+    for(unsigned int i = 0; i < vectors.size(); ++i)
+    {
+      sumOfDifferenceFromMean += pow(vectors[i][element] - meanVector[element], 2.0f);
+    }
+    standardDeviationVector[element] = sqrt(sumOfDifferenceFromMean / static_cast<float>(vectors.size() - 1));
+  }
+
+  // Actually subtract the mean and divide by the standard deviation
+  for(unsigned int element = 0; element < vectors[0].size(); ++element)
+  {
+    for(unsigned int i = 0; i < vectors.size(); ++i)
+    {
+      vectors[i][element] -= meanVector[element];
+      vectors[i][element] /= standardDeviationVector[element];
+    }
+  }
+}
+
 } // end EigenHelpers namespace

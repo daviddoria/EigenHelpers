@@ -43,6 +43,8 @@ void OutputMatrixSize(const Eigen::MatrixXf& m);
 
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep);
 
+void Standardize(EigenHelpers::VectorOfVectors& vectors);
+
 Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors);
 
 Eigen::VectorXf ComputeMinVector(const EigenHelpers::VectorOfVectors& vectors);
