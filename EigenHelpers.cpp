@@ -212,7 +212,7 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors)
   Eigen::VectorXf standardDeviationVector(vectors[0].size());
 
   // Loop over each element
-  for(unsigned int element = 0; element < vectors[0].size(); ++element)
+  for(Eigen::VectorXf::Index element = 0; element < vectors[0].size(); ++element)
   {
     float sumOfDifferenceFromMean = 0.0f;
     for(unsigned int i = 0; i < vectors.size(); ++i)
@@ -223,9 +223,9 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors)
   }
 
   // Actually subtract the mean and divide by the standard deviation
-  for(unsigned int element = 0; element < vectors[0].size(); ++element)
+  for(Eigen::VectorXf::Index element = 0; element < vectors[0].size(); ++element)
   {
-    for(unsigned int i = 0; i < vectors.size(); ++i)
+    for(size_t i = 0; i < vectors.size(); ++i)
     {
       vectors[i][element] -= meanVector[element];
       vectors[i][element] /= standardDeviationVector[element];
