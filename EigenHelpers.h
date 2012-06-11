@@ -43,7 +43,11 @@ void OutputMatrixSize(const Eigen::MatrixXf& m);
 
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep);
 
+/** Subtract the mean and divide by the standard deviation. */
 void Standardize(EigenHelpers::VectorOfVectors& vectors);
+
+/** Subtract the mean and divide by the standard deviation, returning the meanVector and standardDeviationVector's computed by reference. */
+void Standardize(EigenHelpers::VectorOfVectors& vectors, Eigen::VectorXf& meanVector, Eigen::VectorXf& standardDeviationVector);
 
 Eigen::VectorXf ComputeMeanVector(const EigenHelpers::VectorOfVectors& vectors);
 

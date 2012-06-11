@@ -258,30 +258,62 @@ VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vec
   return DimensionalityReduction(vectors, covarianceMatrix, numberOfDimensions);
 }
 
-void Standardize(EigenHelpers::VectorOfVectors& vectors)
+void Standardize(EigenHelpers::VectorOfVectors& vectors, Eigen::VectorXf& meanVector, Eigen::VectorXf& standardDeviationVector)
 {
   // Subtract the mean and divide by the standard devation of each set of corresponding elements.
 
+  unsigned int numberOfVectors = vectors.size();
+
+  if(numberOfVectors == 0)
+  {
+    throw std::runtime_error("Can't Standardize() a list of zero vectors!");
+  }
+
+  unsigned int numberOfDimensions = vectors[0].size();
+
   // Each component of the result is the mean of the corresponding collection of elements. That is,
   // the 0th component of 'meanVector' is the mean of all of the 0th components in 'vectors'.
-  Eigen::VectorXf meanVector = ComputeMeanVector(vectors);
+  meanVector = ComputeMeanVector(vectors);
 
+  for(unsigned int i = 0; i < meanVector.size(); ++i)
+  {
+    if(meanVector[i] != meanVector[i]) // check for NaN
+      {
+        throw std::runtime_error("Standardize: meanVector cannot contain NaN!");
+      }
+  }
   // Variance = 1/NumPixels * sum_i (x_i - u)^2
-  Eigen::VectorXf standardDeviationVector(vectors[0].size());
+  standardDeviationVector.resize(numberOfDimensions);
 
   // Loop over each element
-  for(Eigen::VectorXf::Index element = 0; element < vectors[0].size(); ++element)
+  for(Eigen::VectorXf::Index element = 0; element < numberOfDimensions; ++element)
   {
     float sumOfDifferenceFromMean = 0.0f;
     for(unsigned int i = 0; i < vectors.size(); ++i)
     {
       sumOfDifferenceFromMean += pow(vectors[i][element] - meanVector[element], 2.0f);
     }
-    standardDeviationVector[element] = sqrt(sumOfDifferenceFromMean / static_cast<float>(vectors.size() - 1));
+
+    if(sumOfDifferenceFromMean == 0)
+    {
+      std::stringstream ss;
+      ss << "Standardize: sumOfDifferenceFromMean cannot be zero! Channel "
+         << element << " has mean " << meanVector[element] << " and vector0 has value " << vectors[0][element];
+      throw std::runtime_error(ss.str());
+    }
+
+    float standardDeviation = sqrt(sumOfDifferenceFromMean / static_cast<float>(numberOfVectors - 1)); // this is the "N-1" normalization to get an unbiased estimate
+    if(standardDeviation == 0)
+      {
+        std::stringstream ss;
+        ss << "Standardize: standardDeviation cannot be zero! Channel " << element << " is 0!";
+        throw std::runtime_error(ss.str());
+      }
+    standardDeviationVector[element] = standardDeviation;
   }
 
   // Actually subtract the mean and divide by the standard deviation
-  for(Eigen::VectorXf::Index element = 0; element < vectors[0].size(); ++element)
+  for(Eigen::VectorXf::Index element = 0; element < numberOfDimensions; ++element)
   {
     for(size_t i = 0; i < vectors.size(); ++i)
     {
@@ -289,6 +321,13 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors)
       vectors[i][element] /= standardDeviationVector[element];
     }
   }
+}
+
+void Standardize(EigenHelpers::VectorOfVectors& vectors)
+{
+  Eigen::VectorXf meanVector;
+  Eigen::VectorXf standardDeviationVector;
+  Standardize(vectors, meanVector, standardDeviationVector);
 }
 
 } // end EigenHelpers namespace
