@@ -53,12 +53,21 @@ Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors);
 
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
 
+/** Project vectors into a lower dimensional space. */
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
                                                       const unsigned int numberOfDimensions);
 
+/** Project vectors into a lower dimensional space, where the covarianceMatrix has been pre-computed. */
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
                                                       const Eigen::MatrixXf& covarianceMatrix,
                                                       const unsigned int numberOfDimensions);
+
+/** Project vectors into a lower dimensional space, determining this dimensionality by keeping the number of eigenvalues necessary
+  * to make their sum at least 'eigenvalueWeightToKeep' */
+EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
+                                                      const Eigen::MatrixXf& covarianceMatrix,
+                                                      const float eigenvalueWeightToKeep);
+
 }
 
 #endif

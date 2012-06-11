@@ -191,6 +191,53 @@ EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::Vector
   return projected;
 }
 
+EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
+                                                      const Eigen::MatrixXf& covarianceMatrix,
+                                                      const float singularValueWeightToKeep)
+{
+  // Compute the SVD
+  typedef Eigen::JacobiSVD<Eigen::MatrixXf> SVDType;
+  SVDType svd(covarianceMatrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+  //std::cout << "There are " << svd.singularValues().size() << " singular values." << std::endl;
+
+  // Compute the sum of the singular values
+  float singularValueSum = 0.0f;
+  SVDType::SingularValuesType singularValues = svd.singularValues();
+  std::cout << "SingularValues: ";
+  for(SVDType::Index i = 0; i < singularValues.size(); ++i)
+  {
+    singularValueSum += singularValues[i];
+    std::cout << singularValues[i] << " ";
+  }
+
+  std::cout << std::endl;
+  // Determine how many vectors we need to keep to keep the desired amount of "eigen weight"
+
+  float normalizedSingularVectorSum = 0.0f;
+  unsigned int numberOfDimensions = 0;
+  for(SVDType::Index i = 0; i < singularValues.size(); ++i)
+  {
+    numberOfDimensions++;
+    normalizedSingularVectorSum += singularValues[i]/singularValueSum;
+    if(normalizedSingularVectorSum > singularValueWeightToKeep)
+    {
+      break;
+    }
+  }
+
+  // Only keep the first N singular vectors of U
+  Eigen::MatrixXf truncatedU = TruncateColumns(svd.matrixU(), numberOfDimensions);
+
+  VectorOfVectors projected;
+  for(unsigned int i = 0; i < vectors.size(); ++i)
+  {
+    projected.push_back(truncatedU.transpose() * vectors[i]);
+  }
+
+  return projected;
+}
+
 VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
                                         const unsigned int numberOfDimensions)
 {
