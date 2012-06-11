@@ -150,24 +150,35 @@ Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors)
 
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors)
 {
-  if(vectors.size() == 0)
+  unsigned int numberOfVectors = vectors.size();
+
+  if(numberOfVectors == 0)
   {
     throw std::runtime_error("Can't compute the covariance matrix of a list of vectors of length zero!");
   }
 
+  unsigned int numberOfDimensions = vectors[0].size();
+
   Eigen::VectorXf meanVector = ComputeMeanVector(vectors);
+  for(unsigned int i = 0; i < meanVector.size(); ++i)
+  {
+    if(meanVector[i] != meanVector[i]) // check for NaN
+    {
+      throw std::runtime_error("meanVector cannot contain NaN!");
+    }
+  }
   // std::cout << "meanVector: " << meanVector << std::endl;
 
   // Construct covariance matrix
-  Eigen::MatrixXf covarianceMatrix = Eigen::MatrixXf::Zero(vectors[0].size(), vectors[0].size());
+  Eigen::MatrixXf covarianceMatrix = Eigen::MatrixXf::Zero(numberOfDimensions, numberOfDimensions);
   // std::cout << "covarianceMatrix size: " << covarianceMatrix.rows() << " x " << covarianceMatrix.cols() << std::endl;
 
-  for(unsigned int i = 0; i < vectors.size(); ++i)
+  for(unsigned int i = 0; i < numberOfVectors; ++i)
   {
     covarianceMatrix += (vectors[i] - meanVector) * (vectors[i] - meanVector).transpose();
   }
 
-  covarianceMatrix /= (vectors.size() - 1);
+  covarianceMatrix /= (numberOfVectors - 1); // this is the "N-1" for an unbiased estimate
 
   return covarianceMatrix;
 }
