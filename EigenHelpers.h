@@ -55,7 +55,16 @@ Eigen::VectorXf ComputeMinVector(const EigenHelpers::VectorOfVectors& vectors);
 
 Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors);
 
+/** Construct the sample covariance matrix from a collection of vectors. */
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
+
+/** Construct the sample covariance matrix from a collection of vectors that has already had their mean subtracted. */
+Eigen::MatrixXf ConstructCovarianceMatrixZeroMean(const EigenHelpers::VectorOfVectors& vectors);
+
+/** Construct the sample covariance matrix from a collection of vectors that has already had their mean subtracted.
+  * This function constructs a matrix of the vectors and then uses a huge matrix multiplication instead of vector-at-a-time
+  * constructing the covariance matrix. */
+Eigen::MatrixXf ConstructCovarianceMatrixZeroMeanFast(const EigenHelpers::VectorOfVectors& vectors);
 
 /** Project vectors into a lower dimensional space. */
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,

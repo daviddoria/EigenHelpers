@@ -183,6 +183,58 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
   return covarianceMatrix;
 }
 
+Eigen::MatrixXf ConstructCovarianceMatrixZeroMeanFast(const EigenHelpers::VectorOfVectors& vectors)
+{
+  unsigned int numberOfVectors = vectors.size();
+  unsigned int numberOfDimensions = vectors[0].size();
+  Eigen::MatrixXf featureMatrix(numberOfDimensions, numberOfVectors);
+
+  for(unsigned int vectorId = 0; vectorId < numberOfVectors; ++vectorId)
+  {
+    featureMatrix.col(0) = vectors[0];
+  }
+//   for(unsigned int dimension = 0; dimension < numberOfDimensions; ++dimension)
+//   {
+//     for(unsigned int vectorId = 0; vectorId < numberOfVectors; ++vectorId)
+//     {
+//       featureMatrix(dimension, vectorId) = vectors[vectorId][dimension];
+//     }
+//   }
+
+  std::cout << "Done creating feature matrix." << std::endl;
+
+  Eigen::MatrixXf covarianceMatrix = (1.0f / static_cast<float>(numberOfVectors)) * featureMatrix * featureMatrix.transpose();
+  return covarianceMatrix;
+}
+
+Eigen::MatrixXf ConstructCovarianceMatrixZeroMean(const EigenHelpers::VectorOfVectors& vectors)
+{
+  unsigned int numberOfVectors = vectors.size();
+
+  if(numberOfVectors == 0)
+  {
+    throw std::runtime_error("Can't compute the covariance matrix of a list of vectors of length zero!");
+  }
+
+  unsigned int numberOfDimensions = vectors[0].size();
+
+  // std::cout << "meanVector: " << meanVector << std::endl;
+
+  // Construct covariance matrix
+  Eigen::MatrixXf covarianceMatrix = Eigen::MatrixXf::Zero(numberOfDimensions, numberOfDimensions);
+  // std::cout << "covarianceMatrix size: " << covarianceMatrix.rows() << " x " << covarianceMatrix.cols() << std::endl;
+
+  for(unsigned int i = 0; i < numberOfVectors; ++i)
+  {
+    //printf("Processing %d of %d\n", i, vectors.size());
+    covarianceMatrix += vectors[i] * vectors[i].transpose();
+  }
+
+  covarianceMatrix /= (numberOfVectors - 1); // this is the "N-1" for an unbiased estimate
+
+  return covarianceMatrix;
+}
+
 EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::VectorOfVectors& vectors,
                                                       const Eigen::MatrixXf& covarianceMatrix,
                                                       const unsigned int numberOfDimensions)
