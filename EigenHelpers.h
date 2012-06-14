@@ -84,6 +84,24 @@ EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::Vector
                                                       const Eigen::MatrixXf& covarianceMatrix,
                                                       const float eigenvalueWeightToKeep);
 
-}
+/** Project a vector into a lower dimensional space, determining this dimensionality by keeping the number of eigenvalues necessary
+  * to make their sum at least 'eigenvalueWeightToKeep'. 'U' is the 'U' matrix from the SVD of the covariance matrix. */
+Eigen::VectorXf DimensionalityReduction(const Eigen::VectorXf& v,
+                                        const Eigen::MatrixXf& U,
+                                        const Eigen::VectorXf& singularValues,
+                                        const float singularValueWeightToKeep);
+
+/** Project a vector into a lower dimensional space, where the covarianceMatrix has been pre-computed.
+  * 'U' is the 'U' matrix from the SVD of the covariance matrix.*/
+Eigen::VectorXf DimensionalityReduction(const Eigen::VectorXf& v,
+                                        const Eigen::MatrixXf& U, const unsigned int numberOfDimensions);
+
+/** Determine how many singular values to keep to have kept a particular amount of the 'energy' of the original space */
+unsigned int ComputeNumberOfSingularValuesToKeep(const Eigen::VectorXf& singularValues, const float singularValueWeightToKeep);
+
+/** Compute the pseudo inverse of a matrix. */
+Eigen::MatrixXf PseudoInverse(const Eigen::MatrixXf &m);
+
+} // end EigenHelpers namespace
 
 #endif

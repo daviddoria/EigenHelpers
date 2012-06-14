@@ -160,7 +160,7 @@ Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& v
   unsigned int numberOfDimensions = vectors[0].size();
 
   Eigen::VectorXf meanVector = ComputeMeanVector(vectors);
-  for(unsigned int i = 0; i < meanVector.size(); ++i)
+  for(int i = 0; i < meanVector.size(); ++i)
   {
     if(meanVector[i] != meanVector[i]) // check for NaN
     {
@@ -270,30 +270,7 @@ EigenHelpers::VectorOfVectors DimensionalityReduction(const EigenHelpers::Vector
 
   //std::cout << "There are " << svd.singularValues().size() << " singular values." << std::endl;
 
-  // Compute the sum of the singular values
-  float singularValueSum = 0.0f;
-  SVDType::SingularValuesType singularValues = svd.singularValues();
-  std::cout << "SingularValues: ";
-  for(SVDType::Index i = 0; i < singularValues.size(); ++i)
-  {
-    singularValueSum += singularValues[i];
-    std::cout << singularValues[i] << " ";
-  }
-
-  std::cout << std::endl;
-  // Determine how many vectors we need to keep to keep the desired amount of "eigen weight"
-
-  float normalizedSingularVectorSum = 0.0f;
-  unsigned int numberOfDimensions = 0;
-  for(SVDType::Index i = 0; i < singularValues.size(); ++i)
-  {
-    numberOfDimensions++;
-    normalizedSingularVectorSum += singularValues[i]/singularValueSum;
-    if(normalizedSingularVectorSum > singularValueWeightToKeep)
-    {
-      break;
-    }
-  }
+  unsigned int numberOfDimensions = ComputeNumberOfSingularValuesToKeep(svd.singularValues(), singularValueWeightToKeep);
 
   // Only keep the first N singular vectors of U
   Eigen::MatrixXf truncatedU = TruncateColumns(svd.matrixU(), numberOfDimensions);
@@ -333,7 +310,7 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors, Eigen::VectorXf& meanVe
   // the 0th component of 'meanVector' is the mean of all of the 0th components in 'vectors'.
   meanVector = ComputeMeanVector(vectors);
 
-  for(unsigned int i = 0; i < meanVector.size(); ++i)
+  for(int i = 0; i < meanVector.size(); ++i)
   {
     if(meanVector[i] != meanVector[i]) // check for NaN
       {
@@ -344,7 +321,7 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors, Eigen::VectorXf& meanVe
   standardDeviationVector.resize(numberOfDimensions);
 
   // Loop over each element
-  for(Eigen::VectorXf::Index element = 0; element < numberOfDimensions; ++element)
+  for(int element = 0; element < static_cast<int>(numberOfDimensions); ++element)
   {
     float sumOfDifferenceFromMean = 0.0f;
     for(unsigned int i = 0; i < vectors.size(); ++i)
@@ -371,7 +348,7 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors, Eigen::VectorXf& meanVe
   }
 
   // Actually subtract the mean and divide by the standard deviation
-  for(Eigen::VectorXf::Index element = 0; element < numberOfDimensions; ++element)
+  for(int element = 0; element < static_cast<int>(numberOfDimensions); ++element)
   {
     for(size_t i = 0; i < vectors.size(); ++i)
     {
@@ -386,6 +363,72 @@ void Standardize(EigenHelpers::VectorOfVectors& vectors)
   Eigen::VectorXf meanVector;
   Eigen::VectorXf standardDeviationVector;
   Standardize(vectors, meanVector, standardDeviationVector);
+}
+
+Eigen::VectorXf DimensionalityReduction(const Eigen::VectorXf& v,
+                                        const Eigen::MatrixXf& U,
+                                        const Eigen::VectorXf& singularValues,
+                                        const float singularValueWeightToKeep)
+{
+  unsigned int numberOfDimensions = ComputeNumberOfSingularValuesToKeep(singularValues, singularValueWeightToKeep);
+  return DimensionalityReduction(v, U, numberOfDimensions);
+}
+
+Eigen::VectorXf DimensionalityReduction(const Eigen::VectorXf& v,
+                                        const Eigen::MatrixXf& U, const unsigned int numberOfDimensions)
+{
+  // Only keep the first N singular vectors of U
+  Eigen::MatrixXf truncatedU = TruncateColumns(U, numberOfDimensions);
+
+  return truncatedU * v;
+}
+
+unsigned int ComputeNumberOfSingularValuesToKeep(const Eigen::VectorXf& singularValues, const float singularValueWeightToKeep)
+{
+  float singularValueSum = 0.0f;
+  //SVDType::SingularValuesType singularValues = svd.singularValues();
+  std::cout << "SingularValues: ";
+  for(int i = 0; i < singularValues.size(); ++i)
+  {
+    singularValueSum += singularValues[i];
+    std::cout << singularValues[i] << " ";
+  }
+
+  std::cout << std::endl;
+  // Determine how many vectors we need to keep to keep the desired amount of "eigen weight"
+
+  float normalizedSingularVectorSum = 0.0f;
+  unsigned int numberOfDimensions = 0;
+  for(int i = 0; i < singularValues.size(); ++i)
+  {
+    numberOfDimensions++;
+    normalizedSingularVectorSum += singularValues[i]/singularValueSum;
+    if(normalizedSingularVectorSum > singularValueWeightToKeep)
+    {
+      break;
+    }
+  }
+
+  return numberOfDimensions;
+}
+
+Eigen::MatrixXf PseudoInverse(const Eigen::MatrixXf &a)
+{
+  double epsilon = std::numeric_limits<Eigen::MatrixXf::Scalar>::epsilon();
+
+  if(a.rows()<a.cols())
+  {
+    return PseudoInverse(a.transpose()).transpose();
+  }
+    Eigen::JacobiSVD< Eigen::MatrixXf > svd = a.jacobiSvd(Eigen::ComputeThinU |
+Eigen::ComputeThinV);
+
+  Eigen::MatrixXf::Scalar tolerance = epsilon * std::max(a.cols(),
+a.rows()) * svd.singularValues().array().abs().maxCoeff();
+
+  return svd.matrixV() * Eigen::MatrixXf( (svd.singularValues().array().abs() >
+tolerance).select(svd.singularValues().
+      array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
 }
 
 } // end EigenHelpers namespace
