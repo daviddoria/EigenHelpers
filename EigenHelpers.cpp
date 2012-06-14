@@ -207,6 +207,12 @@ Eigen::MatrixXf ConstructCovarianceMatrixZeroMeanFast(const EigenHelpers::Vector
   return covarianceMatrix;
 }
 
+Eigen::MatrixXf ConstructCovarianceMatrixFromFeatureMatrix(const Eigen::MatrixXf& featureMatrix)
+{
+  Eigen::MatrixXf covarianceMatrix = (1.0f / static_cast<float>(featureMatrix.cols())) * featureMatrix * featureMatrix.transpose();
+  return covarianceMatrix;
+}
+
 Eigen::MatrixXf ConstructCovarianceMatrixZeroMean(const EigenHelpers::VectorOfVectors& vectors)
 {
   unsigned int numberOfVectors = vectors.size();
