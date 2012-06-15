@@ -72,13 +72,12 @@ void OutputVectors(const VectorOfVectors& vectors)
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep)
 {
   Eigen::MatrixXf truncated = Eigen::MatrixXf::Zero(m.rows(), numberOfColumnsToKeep);
-  for(int r = 0; r < truncated.rows(); ++r)
+
+  for(int c = 0; c < truncated.cols(); ++c)
   {
-    for(int c = 0; c < truncated.cols(); ++c)
-    {
-      truncated(r,c) = m(r,c);
-    }
+    truncated.col(c) = m.col(c);
   }
+
   return truncated;
 }
 
