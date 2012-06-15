@@ -55,7 +55,8 @@ Eigen::VectorXf ComputeMinVector(const EigenHelpers::VectorOfVectors& vectors);
 
 Eigen::VectorXf ComputeMaxVector(const EigenHelpers::VectorOfVectors& vectors);
 
-/** Construct the sample covariance matrix from a collection of vectors. */
+/** Construct the sample covariance matrix from a collection of vectors. Note that the eigenvalues of the covariance matrix are equal to
+  * the singular values of the matrix itself. */
 Eigen::MatrixXf ConstructCovarianceMatrix(const EigenHelpers::VectorOfVectors& vectors);
 
 /** Construct the sample covariance matrix from a feature matrix. */

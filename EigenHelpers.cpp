@@ -380,7 +380,7 @@ Eigen::VectorXf DimensionalityReduction(const Eigen::VectorXf& v,
   // Only keep the first N singular vectors of U
   Eigen::MatrixXf truncatedU = TruncateColumns(U, numberOfDimensions);
 
-  return truncatedU * v;
+  return truncatedU.transpose() * v;
 }
 
 unsigned int ComputeNumberOfSingularValuesToKeep(const Eigen::VectorXf& singularValues, const float singularValueWeightToKeep)
