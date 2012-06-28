@@ -69,6 +69,18 @@ void OutputVectors(const VectorOfVectors& vectors)
   }
 }
 
+Eigen::MatrixXf TruncateRows(const Eigen::MatrixXf& m, const unsigned int numberOfRowsToKeep)
+{
+  Eigen::MatrixXf truncated = Eigen::MatrixXf::Zero(numberOfRowsToKeep, m.cols());
+
+  for(int r = 0; r < truncated.rows(); ++r)
+  {
+    truncated.row(r) = m.row(r);
+  }
+
+  return truncated;
+}
+
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep)
 {
   Eigen::MatrixXf truncated = Eigen::MatrixXf::Zero(m.rows(), numberOfColumnsToKeep);
@@ -428,6 +440,21 @@ a.rows()) * svd.singularValues().array().abs().maxCoeff();
   return svd.matrixV() * Eigen::MatrixXf( (svd.singularValues().array().abs() >
 tolerance).select(svd.singularValues().
       array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
+}
+
+void OutputHorizontal(const std::string& name, const Eigen::VectorXf& v)
+{
+  std::cout << name << ": ";
+  OutputHorizontal(v);
+}
+
+void OutputHorizontal(const Eigen::VectorXf& v)
+{
+  for(int i = 0; i < v.size(); ++i)
+  {
+    std::cout << v[i] << " ";
+  }
+  std::cout << std::endl;
 }
 
 } // end EigenHelpers namespace

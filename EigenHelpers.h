@@ -39,9 +39,17 @@ Eigen::VectorXf STDVectorToEigenVector(const std::vector<float>& vec);
 
 void OutputVectors(const VectorOfVectors& vectors);
 
+void OutputHorizontal(const Eigen::VectorXf& v);
+
+void OutputHorizontal(const std::string& name, const Eigen::VectorXf& v);
+
 void OutputMatrixSize(const Eigen::MatrixXf& m);
 
+/** Keep only the first numberOfColumnsToKeep columns. That is, an m-x-n matrix becomes m-x-numberOfColumnsToKeep. */
 Eigen::MatrixXf TruncateColumns(const Eigen::MatrixXf& m, const unsigned int numberOfColumnsToKeep);
+
+/** Keep only the first numberOfRowsToKeep rows. That is, an m-x-n matrix becomes numberOfRowsToKeep-x-n. */
+Eigen::MatrixXf TruncateRows(const Eigen::MatrixXf& m, const unsigned int numberOfRowsToKeep);
 
 /** Subtract the mean and divide by the standard deviation. */
 void Standardize(EigenHelpers::VectorOfVectors& vectors);
