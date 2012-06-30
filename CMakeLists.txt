@@ -10,6 +10,7 @@ add_library(EigenHelpers EigenHelpers.cpp)
 # to be treated as the 0th component of a vector.
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
 
-# if(BuildTests)
-#   add_subdirectory(Tests)
-# endif(BuildTests)
+SET(EigenHelpers_BuildTests OFF CACHE BOOL "EigenHelpers_BuildTests")
+if(EigenHelpers_BuildTests)
+  add_subdirectory(Tests)
+endif()

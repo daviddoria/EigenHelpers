@@ -503,6 +503,32 @@ void OutputHorizontal(const TVector& v)
   std::cout << std::endl;
 }
 
+template <typename TVector>
+TVector ScaleVector(const TVector& v, const typename TVector::Scalar& lower,
+                    const typename TVector::Scalar& upper)
+{
+  std::vector<typename TVector::Scalar> values(v.size());
+  for(int i = 0; i < v.size(); ++i)
+  {
+    values[i] = v[i];
+  }
+  typename TVector::Scalar minValue = *(std::min_element(values.begin(), values.end()));
+  typename TVector::Scalar maxValue = *(std::max_element(values.begin(), values.end()));
+
+  typename TVector::Scalar outputRange = upper - lower;
+  typename TVector::Scalar valueRange = maxValue - minValue;
+
+  TVector outputVector(v.size());
+
+  typename TVector::Scalar scaleFactor = outputRange/valueRange;
+  for(int i = 0; i < v.size(); ++i)
+  {
+    outputVector[i] = (v[i] - minValue) * scaleFactor;
+  }
+
+  return outputVector;
+}
+
 } // namespace EigenHelpers
 
 #endif

@@ -145,6 +145,11 @@ unsigned int ComputeNumberOfSingularValuesToKeep(const TVector& singularValues, 
 template <typename TMatrix>
 TMatrix PseudoInverse(const TMatrix &m);
 
+/** Scale the values of a vector. */
+template <typename TVector>
+TVector ScaleVector(const TVector& v, const typename TVector::Scalar& lower,
+                    const typename TVector::Scalar& upper);
+
 } // end EigenHelpers namespace
 
 #include "EigenHelpers.hpp"
