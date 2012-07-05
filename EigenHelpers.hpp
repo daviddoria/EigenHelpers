@@ -254,7 +254,8 @@ TMatrix ConstructCovarianceMatrixZeroMeanFast(const TVectorOfVectors& vectors)
 template <typename TMatrix>
 TMatrix ConstructCovarianceMatrixFromFeatureMatrix(const TMatrix& featureMatrix)
 {
-  TMatrix covarianceMatrix = (1.0f / static_cast<typename TMatrix::Scalar>(featureMatrix.cols())) * featureMatrix * featureMatrix.transpose();
+  float normalizationFactor = (1.0f / static_cast<typename TMatrix::Scalar>(featureMatrix.cols() - 1));
+  TMatrix covarianceMatrix = normalizationFactor * featureMatrix * featureMatrix.transpose();
   return covarianceMatrix;
 }
 
