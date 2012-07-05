@@ -135,7 +135,7 @@ typename TVectorOfVectors::value_type ComputeMeanVector(const TVectorOfVectors& 
     throw std::runtime_error("Can't compute the mean of a list of vectors of length zero!");
   }
   // Compute mean vector
-  typename TVectorOfVectors::value_type meanVector = typename TVectorOfVectors::value_type::Zero(vectors[0].size());
+  typename TVectorOfVectors::value_type meanVector = TVectorOfVectors::value_type::Zero(vectors[0].size());
   for(unsigned int i = 0; i < vectors.size(); ++i)
   {
     meanVector += vectors[i];
@@ -154,7 +154,7 @@ typename TVectorOfVectors::value_type ComputeMinVector(const TVectorOfVectors& v
     throw std::runtime_error("Can't compute the mean of a list of vectors of length zero!");
   }
 
-  typename TVectorOfVectors::value_type minVector = typename TVectorOfVectors::value_type::Zero(vectors[0].size());
+  typename TVectorOfVectors::value_type minVector = TVectorOfVectors::value_type::Zero(vectors[0].size());
   for(int dim = 0; dim < vectors[0].size(); ++dim) // loop through each dimension
   {
     std::vector<typename TVectorOfVectors::value_type::Scalar> values(vectors[0].size());
@@ -176,7 +176,7 @@ typename TVectorOfVectors::value_type ComputeMaxVector(const TVectorOfVectors& v
     throw std::runtime_error("Can't compute the mean of a list of vectors of length zero!");
   }
 
-  typename TVectorOfVectors::value_type maxVector = typename TVectorOfVectors::value_type::Zero(vectors[0].size());
+  typename TVectorOfVectors::value_type maxVector = TVectorOfVectors::value_type::Zero(vectors[0].size());
   for(int dim = 0; dim < vectors[0].size(); ++dim) // loop through each dimension
   {
     std::vector<typename TVectorOfVectors::value_type::Scalar> values(vectors[0].size());
