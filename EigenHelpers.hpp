@@ -247,15 +247,32 @@ TMatrix ConstructCovarianceMatrixZeroMeanFast(const TVectorOfVectors& vectors)
 
   std::cout << "Done creating feature matrix." << std::endl;
 
-  TMatrix covarianceMatrix = (1.0f / static_cast<typename TMatrix::Scalar>(numberOfVectors)) * featureMatrix * featureMatrix.transpose();
+  // This is the naive method
+  //TMatrix covarianceMatrix = (1.0f / static_cast<typename TMatrix::Scalar>(numberOfVectors)) * featureMatrix * featureMatrix.transpose();
+
+  // This method only computes half of the covariance matrix because it is symmetric
+  TMatrix covarianceMatrix(featureMatrix.rows(), featureMatrix.rows());
+  covarianceMatrix.template selfadjointView<Eigen::Upper>().rankUpdate(featureMatrix);
+
+  // Normalize
+  covarianceMatrix *= (1.0f / static_cast<typename TMatrix::Scalar>(numberOfVectors - 1));
+  
   return covarianceMatrix;
 }
 
 template <typename TMatrix>
 TMatrix ConstructCovarianceMatrixFromFeatureMatrix(const TMatrix& featureMatrix)
 {
+  // This method only computes half of the covariance matrix because it is symmetric
+  TMatrix covarianceMatrix(featureMatrix.rows(), featureMatrix.rows());
+  covarianceMatrix.template selfadjointView<Eigen::Upper>().rankUpdate(featureMatrix);
+
   float normalizationFactor = (1.0f / static_cast<typename TMatrix::Scalar>(featureMatrix.cols() - 1));
-  TMatrix covarianceMatrix = normalizationFactor * featureMatrix * featureMatrix.transpose();
+  covarianceMatrix *= normalizationFactor;
+  
+  // This is the naive method
+  //TMatrix covarianceMatrix = normalizationFactor * featureMatrix * featureMatrix.transpose();
+  
   return covarianceMatrix;
 }
 
