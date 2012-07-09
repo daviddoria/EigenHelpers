@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright David Doria 2011 daviddoria@gmail.com
+ *  Copyright David Doria 2012 daviddoria@gmail.com
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -545,6 +545,48 @@ TVector ScaleVector(const TVector& v, const typename TVector::Scalar& lower,
   }
 
   return outputVector;
+}
+
+template <typename TVector>
+TVector RandomUnitVector(const unsigned int dim)
+{
+  TVector randomUnitVector(dim);
+  for(int i = 0; i < randomUnitVector.size(); ++i)
+  {
+    randomUnitVector[i] = drand48();
+  }
+
+  randomUnitVector.normalize();
+
+  return randomUnitVector;
+}
+
+template <typename TPoint>
+void GetBoundingBox(const std::vector<TPoint, Eigen::aligned_allocator<TPoint> >& data, TPoint& minCorner, TPoint& maxCorner)
+{
+  assert(data.size() > 0);
+
+  minCorner.resize(data[0].size());
+  maxCorner.resize(data[0].size());
+
+  for(int coordinate = 0; coordinate < data[0].size(); ++coordinate)
+  {
+    minCorner[coordinate] = std::numeric_limits<typename TPoint::Scalar>::max();
+    maxCorner[coordinate] = std::numeric_limits<typename TPoint::Scalar>::min();
+
+    for(unsigned int pointId = 0; pointId < data.size(); ++pointId)
+    {
+      if(data[pointId][coordinate] > maxCorner[coordinate])
+      {
+        maxCorner[coordinate] = data[pointId][coordinate];
+      }
+
+      if(data[pointId][coordinate] < minCorner[coordinate])
+      {
+        minCorner[coordinate] = data[pointId][coordinate];
+      }
+    }
+  }
 }
 
 } // namespace EigenHelpers

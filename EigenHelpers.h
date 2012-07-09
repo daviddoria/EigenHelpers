@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright David Doria 2011 daviddoria@gmail.com
+ *  Copyright David Doria 2012 daviddoria@gmail.com
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -149,6 +149,14 @@ TMatrix PseudoInverse(const TMatrix &m);
 template <typename TVector>
 TVector ScaleVector(const TVector& v, const typename TVector::Scalar& lower,
                     const typename TVector::Scalar& upper);
+
+/** Construct a random unit vector with dimension 'dim'. */
+template <typename TVector>
+TVector RandomUnitVector(const unsigned int dim);
+
+/** Get the min and max corner of the bounding box of the data. Both are returned by reference. */
+template <typename TPoint>
+void GetBoundingBox(const std::vector<TPoint, Eigen::aligned_allocator<TPoint> >& data, TPoint& minCorner, TPoint& maxCorner);
 
 } // end EigenHelpers namespace
 
