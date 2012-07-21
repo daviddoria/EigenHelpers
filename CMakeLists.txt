@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(EigenHelpers)
 
+if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+  set(EigenHelpers_includes ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
+endif()
+
 include_directories(/media/portable/src/Eigen)
 
 add_library(EigenHelpers EigenHelpers.cpp)
