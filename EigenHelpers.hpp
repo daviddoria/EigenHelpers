@@ -491,7 +491,8 @@ TMatrix PseudoInverse(const TMatrix &a)
 
   if(a.rows()<a.cols())
   {
-    return PseudoInverse(a.transpose()).transpose();
+    TMatrix aT = a.transpose();
+    return PseudoInverse(aT).transpose(); // For some reason the compiler doesn't like PseudoInverse(a.transpose()).transpose()
   }
     Eigen::JacobiSVD<TMatrix> svd =
          a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
