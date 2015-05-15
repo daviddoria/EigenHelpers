@@ -158,6 +158,8 @@ TVector RandomUnitVector(const unsigned int dim);
 template <typename TPoint>
 void GetBoundingBox(const std::vector<TPoint, Eigen::aligned_allocator<TPoint> >& data, TPoint& minCorner, TPoint& maxCorner);
 
+void GetBoundingBox(const Eigen::MatrixXd& data, Eigen::VectorXd& minCorner, Eigen::VectorXd& maxCorner);
+
 } // end EigenHelpers namespace
 
 #include "EigenHelpers.hpp"

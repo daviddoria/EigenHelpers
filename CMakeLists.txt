@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(EigenHelpers)
 
+# This is needed for shared_ptr and the trick using enable_if and if_fundamental to allow scalars
+# to be treated as the 0th component of a vector.
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/" ${CMAKE_MODULE_PATH})
 
 #### Eigen ####
@@ -27,11 +31,11 @@ if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
   set(EigenHelpers_libraries ${EigenHelpers_libraries} EigenHelpers PARENT_SCOPE)
 endif()
 
+add_custom_target(EigenHelpersSources SOURCES
+EigenHelpers.h
+EigenHelpers.hpp
+)
 add_library(EigenHelpers EigenHelpers.cpp)
-
-# This is needed for shared_ptr and the trick using enable_if and if_fundamental to allow scalars
-# to be treated as the 0th component of a vector.
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
 
 SET(EigenHelpers_BuildTests OFF CACHE BOOL "EigenHelpers_BuildTests")
 if(EigenHelpers_BuildTests)
