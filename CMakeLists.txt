@@ -26,10 +26,7 @@ if(NOT EIGEN3_FOUND)
   include_directories(${EIGEN3_INCLUDE_DIR})
 endif()
 
-if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-  set(EigenHelpers_includes ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
-  set(EigenHelpers_libraries ${EigenHelpers_libraries} EigenHelpers PARENT_SCOPE)
-endif()
+CreateSubmodule(EigenHelpers)
 
 add_custom_target(EigenHelpersSources SOURCES
 EigenHelpers.h
