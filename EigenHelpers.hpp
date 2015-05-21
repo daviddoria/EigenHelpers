@@ -554,7 +554,7 @@ TVector RandomUnitVector(const unsigned int dim)
   TVector randomUnitVector(dim);
   for(int i = 0; i < randomUnitVector.size(); ++i)
   {
-    randomUnitVector[i] = drand48();
+    randomUnitVector[i] = drand48() - 0.5f;
   }
 
   randomUnitVector.normalize();
